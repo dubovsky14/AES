@@ -14,7 +14,7 @@ int main(int argc, const char **argv)   {
     while(true) {
 
         Byte inverse = ((Byte(this_char)).get_inverse())*(Byte(this_char));
-        Byte encrypted = SBox::Encrypt(Byte(this_char));
+        Byte encrypted = SBox::Decrypt(Byte(this_char));
         cout << std::hex << (unsigned short)(encrypted.GetValue());
         //cout << std::hex << (unsigned int)(this_char);
         //cout << std::hex << (unsigned int)(inverse.GetValue());

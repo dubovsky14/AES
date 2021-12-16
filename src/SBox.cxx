@@ -19,12 +19,6 @@ void SBox::InitializeSMatrix() {
 
 
 AES::Byte SBox::Encrypt(const AES::Byte &input_byte)  {
-//    Byte result(0x63);
-//    for (const Byte &matrix_line : s_S_matrix_lines)    {
-//        result = result + input_byte*matrix_line;
-//    }
-//    return result;
-
     const Byte input_inverse = input_byte.get_inverse();
     return  input_inverse +
             Byte::circular_bit_shift_left(input_inverse, 1)    +
@@ -35,8 +29,8 @@ AES::Byte SBox::Encrypt(const AES::Byte &input_byte)  {
 };
 
 AES::Byte SBox::Decrypt(const AES::Byte &input_byte)   {
-    return  Byte::circular_bit_shift_left(input_byte, 1)    +
+    return  (Byte::circular_bit_shift_left(input_byte, 1)    +
             Byte::circular_bit_shift_left(input_byte, 3)    +
             Byte::circular_bit_shift_left(input_byte, 6)    +
-            Byte((unsigned char)(0x5));
+            Byte((unsigned char)(0x5))).get_inverse();
 };
