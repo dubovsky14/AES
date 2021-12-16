@@ -1,6 +1,7 @@
 #include "../aes/Byte.h"
 
 #include <iostream>
+#include <bitset>
 
 using namespace AES;
 using namespace std;
@@ -19,22 +20,14 @@ Byte Byte::operator-(const Byte& b) {
 
 
 Byte Byte::operator*(const Byte& b) {
-    unsigned short int result = 0;
-    // firstly perform the multiplication without the modulo (can't use m_value*b.m_value because the coefficients are from GF(2)):
-    unsigned char multiplier = 0b10000000;
-    while (multiplier > 0)    {
-        if (multiplier & m_value)   {
-            result = result ^ (unsigned short int)(multiplier * b.m_value);
-        }
-        multiplier = multiplier >> 1;
-    }
+    unsigned short int result = multiply_without_modulo<unsigned short int>(m_value, b.m_value);
+    unsigned short int first_non_zero_bit_result = get_index_of_first_non_zero_bit(result);
+    unsigned short int first_non_zero_bit_modulo = get_index_of_first_non_zero_bit(s_modulo_polynomial);
 
-    //unsigned short int mod_temp = s_modulo_polynomial*0b10000000;
-    //while (result > 255)    {
-    //    while (mod_temp > result)  {
-    //        mod_temp /= 2;
-    //    }
-    //    result = result ^ mod_temp;
-    //}
+    while (first_non_zero_bit_result >= first_non_zero_bit_modulo)    {
+        const unsigned short int temp_modulo = s_modulo_polynomial << (first_non_zero_bit_result - first_non_zero_bit_modulo);
+        result = temp_modulo ^ result;
+        first_non_zero_bit_result = get_index_of_first_non_zero_bit(result);
+    }
     return Byte((unsigned char)(result));
 };
