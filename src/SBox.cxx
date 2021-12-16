@@ -4,20 +4,6 @@
 
 using namespace AES;
 
-
-std::vector<Byte> SBox::s_S_matrix_lines;
-std::vector<Byte> SBox::s_S_inverse_matrix_lines;
-
-void SBox::InitializeSMatrix() {
-    s_S_matrix_lines.clear();
-    Byte line((unsigned char)(0b00011111));
-    for (unsigned int i = 0; i<8; i++)  {
-        s_S_matrix_lines.push_back(line);
-        line = Byte::circular_bit_shift_left(line, 1);
-    }
-};
-
-
 AES::Byte SBox::Encrypt(const AES::Byte &input_byte)  {
     const Byte input_inverse = input_byte.get_inverse();
     return  input_inverse +

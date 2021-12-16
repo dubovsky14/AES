@@ -66,7 +66,6 @@ unsigned char Byte::circular_bit_shift_right(const unsigned char &input, unsigne
     return (unsigned char)((input >> shift_size) | (input << (8-shift_size)));
 }
 
-
 Byte Byte::circular_bit_shift_left(const Byte &input, unsigned int shift_size)    {
     return Byte(circular_bit_shift_left(input.m_value, shift_size));
 };

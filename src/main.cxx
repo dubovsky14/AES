@@ -7,7 +7,6 @@ using namespace std;
 using namespace AES;
 
 int main(int argc, const char **argv)   {
-    SBox::InitializeSMatrix();
     Byte::Initialize();
 
     unsigned char this_char = 0;
