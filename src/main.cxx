@@ -13,6 +13,13 @@ using namespace AES;
 int main(int argc, const char **argv)   {
     Byte::Initialize();
 
+    for (unsigned short i = 0; i < 256; i++)    {
+        cout << std::hex <<  i;
+        cout << "\t";
+        cout << std::hex << (short int)(Byte(i).get_inverse().GetValue());
+        cout << endl;
+    }
+
     uint64_t zero = 0;
     uint64_t one = 1;
     vector<Byte> key            = get_vector_of_bytes(one, zero);
@@ -27,6 +34,13 @@ int main(int argc, const char **argv)   {
     }
     EncryptIteration::Encrypt(&cipher_text[0], key_scheduler.GetSubKey(10), false);
 
+    vector<Byte> decrypted_text = cipher_text;
+    EncryptIteration::Decrypt(&decrypted_text[0], key_scheduler.GetSubKey(10), false);
+    for (unsigned int i_encryption_iter = 1; i_encryption_iter < 10; i_encryption_iter++)   {
+        EncryptIteration::Decrypt(&decrypted_text[0], key_scheduler.GetSubKey(10-i_encryption_iter), true);
+    }
+    EncryptIteration::AddKey(&decrypted_text[0], key_scheduler.GetSubKey(0));
+
 
     cout << "key \t\t= ";
     print_out_byte_vector(key);
@@ -34,6 +48,8 @@ int main(int argc, const char **argv)   {
     print_out_byte_vector(plain_text);
     cout << "\ncipher text \t= ";
     print_out_byte_vector(cipher_text);
+    cout << "\ndecrypted text \t= ";
+    print_out_byte_vector(decrypted_text);
     cout << endl;
 
 
