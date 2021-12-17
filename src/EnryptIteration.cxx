@@ -48,7 +48,7 @@ void EncryptIteration::ApplyMixMatrix(Byte *array_of_4_bytes)   {
     for (unsigned int i = 0; i < 4; i++)    {
         s_mix_matrix_temp_result[i] = Byte(0);
         for (unsigned int j = 0; j < 4; j++)    {
-            s_mix_matrix_temp_result[i] = s_mix_matrix_temp_result[i] + s_mix_column_matrix[i][j]*array_of_4_bytes[j];
+            s_mix_matrix_temp_result[i] += s_mix_column_matrix[i][j]*array_of_4_bytes[j];
         }
     }
     for (unsigned int i = 0; i < 4; i++)    {

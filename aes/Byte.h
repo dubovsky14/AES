@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <map>
+#include <vector>
+#include <string>
 
 namespace AES   {
     class Byte  {
@@ -11,6 +13,8 @@ namespace AES   {
             unsigned char GetValue() const {return m_value;};
 
             Byte operator+(const Byte& b)   const;
+
+            void operator+=(const Byte& b);
 
             Byte operator-(const Byte& b)   const;
 
@@ -67,6 +71,7 @@ namespace AES   {
         return result;
     };
 
+    std::vector<Byte>   get_vector_of_bytes(const std::string &input_string);
 
-
+    std::vector<Byte>   get_vector_of_bytes(uint64_t first_half, uint64_t second_half);
 }

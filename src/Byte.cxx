@@ -31,6 +31,10 @@ Byte Byte::operator+(const Byte& b)  const {
     return Byte(b.m_value ^ m_value);
 };
 
+void Byte::operator+=(const Byte& b)      {
+    m_value = m_value ^ b.m_value;
+};
+
 Byte Byte::operator-(const Byte& b)  const {
     return Byte(b.m_value ^ m_value);
 };
@@ -72,4 +76,26 @@ Byte Byte::circular_bit_shift_left(const Byte &input, unsigned int shift_size)  
 
 Byte Byte::circular_bit_shift_right(const Byte &input, unsigned int shift_size)    {
     return Byte(circular_bit_shift_right(input.m_value, shift_size));
+};
+
+std::vector<Byte>   AES::get_vector_of_bytes(const std::string &input_string)  {
+    const unsigned int length = input_string.length();
+    vector<Byte> result;
+    result.resize(length);
+    for (unsigned int i = 0; i < length; i++)   {
+        result[i] = Byte((unsigned char)(input_string[i]));
+    }
+    return result;
+};
+
+std::vector<Byte>   AES::get_vector_of_bytes(uint64_t first_half, uint64_t second_half)  {
+    vector<Byte> result;
+    result.resize(16);
+    for (unsigned int i = 0; i < 8; i++)   {
+        result[15-i] = Byte((unsigned char)(second_half >> i*8));
+    }
+    for (unsigned int i = 0; i < 8; i++)   {
+        result[7-i] = Byte((unsigned char)(first_half >> i*8));
+    }
+    return result;
 };
