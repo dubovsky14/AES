@@ -4,6 +4,7 @@ project(AES)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS "-O3 -Wall")
 
 file(GLOB SOURCES "src/*.cxx")

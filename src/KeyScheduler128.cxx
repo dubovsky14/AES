@@ -37,8 +37,7 @@ void KeyScheduler128::InitializeSubkeys()   {
         // first word
         for (unsigned int i_byte = 0; i_byte<4; i_byte++)  temp_subkeys[i_iter][i_byte] += g_function_result[i_byte];
 
-        // Cannot got in ascending order, since i+1 is modified based on i
-        for (unsigned int i_word = 3; i_word>0; i_word--)   {
+        for (unsigned int i_word = 1; i_word<4; i_word++)   {
             for (unsigned int i_byte = 0; i_byte<4; i_byte++)   {
                 temp_subkeys[i_iter][i_word*4+i_byte] += temp_subkeys[i_iter][(i_word-1)*4+i_byte];
             }

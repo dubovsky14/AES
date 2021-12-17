@@ -14,10 +14,12 @@ Byte EncryptIteration::s_mix_column_matrix[4][4] {
 
 Byte EncryptIteration::s_mix_matrix_temp_result[4];
 
-void EncryptIteration::Encrypt(Byte *array_of_16_bytes, const Byte *subkey)  {
+void EncryptIteration::Encrypt(Byte *array_of_16_bytes, const Byte *subkey, bool mix_columns)  {
     SubstituteBytes(array_of_16_bytes);
     ShiftRows(array_of_16_bytes);
-    MixColumns(array_of_16_bytes);
+    if (mix_columns)    {
+        MixColumns(array_of_16_bytes);
+    }
     AddKey(array_of_16_bytes, subkey);
 };
 
@@ -58,6 +60,6 @@ void EncryptIteration::ApplyMixMatrix(Byte *array_of_4_bytes)   {
 
 void EncryptIteration::AddKey(Byte *array_of_16_bytes, const Byte *subkey)    {
     for (unsigned int i_byte = 0; i_byte < 16; i_byte++)    {
-        array_of_16_bytes[i_byte] = array_of_16_bytes[i_byte] + subkey[i_byte];
+        array_of_16_bytes[i_byte] += subkey[i_byte];
     }
 };

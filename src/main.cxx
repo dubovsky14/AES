@@ -15,18 +15,17 @@ int main(int argc, const char **argv)   {
 
     uint64_t zero = 0;
     uint64_t one = 1;
-    vector<Byte> key            = get_vector_of_bytes(zero, one);
+    vector<Byte> key            = get_vector_of_bytes(one, zero);
     vector<Byte> plain_text     = get_vector_of_bytes(zero, zero);
-    vector<Byte> cipher_text2   = get_vector_of_bytes(zero, one);
     vector<Byte> cipher_text    = plain_text;
 
 
     KeyScheduler128 key_scheduler(key);
-
-    for (unsigned int i_encryption_iter = 1; i_encryption_iter <= 11; i_encryption_iter++)   {
-        EncryptIteration::Encrypt(&cipher_text[0], key_scheduler.GetSubKey(i_encryption_iter));
-        EncryptIteration::Encrypt(&cipher_text2[0], key_scheduler.GetSubKey(i_encryption_iter));
+    EncryptIteration::AddKey(&cipher_text[0], key_scheduler.GetSubKey(0));
+    for (unsigned int i_encryption_iter = 1; i_encryption_iter < 10; i_encryption_iter++)   {
+        EncryptIteration::Encrypt(&cipher_text[0], key_scheduler.GetSubKey(i_encryption_iter), true);
     }
+    EncryptIteration::Encrypt(&cipher_text[0], key_scheduler.GetSubKey(10), false);
 
 
     cout << "key \t\t= ";
@@ -35,8 +34,6 @@ int main(int argc, const char **argv)   {
     print_out_byte_vector(plain_text);
     cout << "\ncipher text \t= ";
     print_out_byte_vector(cipher_text);
-    cout << "\ncipher text2\t= ";
-    print_out_byte_vector(cipher_text2);
     cout << endl;
 
 

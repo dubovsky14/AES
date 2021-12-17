@@ -7,7 +7,7 @@
 namespace AES   {
     class EncryptIteration  {
         public:
-            static void Encrypt(Byte *array_of_16_bytes, const Byte *subkey);
+            static void Encrypt(Byte *array_of_16_bytes, const Byte *subkey, bool mix_columns);
 
         //private:
             static void SubstituteBytes(Byte *array_of_16_bytes);
