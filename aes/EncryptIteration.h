@@ -30,6 +30,5 @@ namespace AES   {
 
             static Byte s_mix_column_matrix_inverse[4][4];
 
-            static Byte s_mix_matrix_temp_result[4];
     };
 }

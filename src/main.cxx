@@ -40,14 +40,15 @@ int main(int argc, const char **argv)   {
     cout << endl;
 
 
-
+    const long long int number_of_blocks = 100000000;
     std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-    for (unsigned int i = 0; i < 10000000; i++)  {
+    for (unsigned long long int i = 0; i < number_of_blocks; i++)  {
         aes_handler.Encrypt(&cipher_text[0]);
     }
     std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-    std::cout << "Time difference = " << std::dec << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "[ms]" << std::endl;
-
+    unsigned int dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+    std::cout << "Time difference = " << std::dec << dt << "[ms]" << std::endl;
+    std::cout << "Encryption speed = " << (16.*number_of_blocks/(dt/1000.))/1000000. << " MB/s" <<  endl;
 
     cout << "\ncipher text \t= ";
     print_out_byte_vector(cipher_text);

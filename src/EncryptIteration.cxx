@@ -5,8 +5,10 @@
 #include <iostream>
 #include <cstdint>
 #include <cstring>
+#include <algorithm>
 
 using namespace AES;
+
 
 
 Byte EncryptIteration::s_mix_column_matrix[4][4] {
@@ -22,8 +24,6 @@ Byte EncryptIteration::s_mix_column_matrix_inverse[4][4] {
     {Byte((unsigned char)(0x0d)), Byte((unsigned char)(0x09)), Byte((unsigned char)(0x0e)), Byte((unsigned char)(0x0b))},
     {Byte((unsigned char)(0x0b)), Byte((unsigned char)(0x0d)), Byte((unsigned char)(0x09)), Byte((unsigned char)(0x0e))},
 };
-
-Byte EncryptIteration::s_mix_matrix_temp_result[4];
 
 void EncryptIteration::Decrypt(Byte *array_of_16_bytes, const Byte *subkey, bool mix_columns)  {
     AddKey(array_of_16_bytes, subkey);
@@ -68,9 +68,7 @@ void EncryptIteration::ShiftRows(Byte *array_of_16_bytes, bool inverse) {
         }
     }
 
-    for (unsigned int i_byte = 0; i_byte < 16; i_byte++)    {
-        array_of_16_bytes[i_byte] = result[i_byte];
-    }
+    memcpy( array_of_16_bytes, result, 16 );
 };
 
 void EncryptIteration::MixColumns(Byte *array_of_16_bytes, bool inverse)    {
@@ -85,34 +83,38 @@ void EncryptIteration::MixColumns(Byte *array_of_16_bytes, bool inverse)    {
 };
 
 void EncryptIteration::ApplyMixMatrixEncryption(Byte *array_of_4_bytes)   {
+    Byte mix_matrix_temp_result[4];
     for (unsigned int i = 0; i < 4; i++)    {
-        s_mix_matrix_temp_result[i] = Byte(0);
+        mix_matrix_temp_result[i] = Byte(0);
         for (unsigned int j = 0; j < 4; j++)    {
-            s_mix_matrix_temp_result[i] += s_mix_column_matrix[i][j]*array_of_4_bytes[j];
+            mix_matrix_temp_result[i] += s_mix_column_matrix[i][j]*array_of_4_bytes[j];
         }
     }
     //for (unsigned int i = 0; i < 4; i++)    {
-    //    array_of_4_bytes[i] = s_mix_matrix_temp_result[i];
+    //    array_of_4_bytes[i] = mix_matrix_temp_result[i];
     //}
-    memcpy( array_of_4_bytes, s_mix_matrix_temp_result, 4 );
+    memcpy( array_of_4_bytes, mix_matrix_temp_result, 4 );
 
 };
 
 
 void EncryptIteration::ApplyMixMatrixDecryption(Byte *array_of_4_bytes)   {
+    Byte mix_matrix_temp_result[4];
     for (unsigned int i = 0; i < 4; i++)    {
-        s_mix_matrix_temp_result[i] = Byte(0);
+        mix_matrix_temp_result[i] = Byte(0);
         for (unsigned int j = 0; j < 4; j++)    {
-            s_mix_matrix_temp_result[i] += s_mix_column_matrix_inverse[i][j]*array_of_4_bytes[j];
+            mix_matrix_temp_result[i] += s_mix_column_matrix_inverse[i][j]*array_of_4_bytes[j];
         }
     }
     for (unsigned int i = 0; i < 4; i++)    {
-        array_of_4_bytes[i] = s_mix_matrix_temp_result[i];
+        array_of_4_bytes[i] = mix_matrix_temp_result[i];
     }
 }
 
 void EncryptIteration::AddKey(Byte *array_of_16_bytes, const Byte *subkey)    {
-    for (unsigned int i_byte = 0; i_byte < 16; i_byte++)    {
-        array_of_16_bytes[i_byte] += subkey[i_byte];
-    }
+    std::transform( reinterpret_cast<unsigned long long int *> (array_of_16_bytes),
+                    reinterpret_cast<unsigned long long int *> (array_of_16_bytes+16),
+                    reinterpret_cast<const unsigned long long int *> (subkey),
+                    reinterpret_cast<unsigned long long int *> (array_of_16_bytes),
+                    std::bit_xor ());
 };
