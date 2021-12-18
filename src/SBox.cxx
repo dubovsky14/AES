@@ -25,12 +25,3 @@ void SBox::Initialize()   {
         s_sbox_encrypt[input_byte.GetValue()]      = encrypted_byte;
     }
 };
-
-
-AES::Byte SBox::Encrypt(const AES::Byte &input_byte)  {
-    return  s_sbox_encrypt[input_byte.GetValue()];
-};
-
-AES::Byte SBox::Decrypt(const AES::Byte &input_byte)   {
-    return  s_sbox_decrypt[input_byte.GetValue()];
-};

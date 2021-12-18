@@ -25,10 +25,6 @@ void Byte::Initialize() {
     }
 }
 
-Byte::Byte(unsigned char x) {
-    m_value = x;
-};
-
 unsigned short Byte::get_modulo_polynomial(unsigned short numerator, unsigned short denominator)  {
     unsigned short int result = numerator;
     unsigned short int first_non_zero_bit_result = get_index_of_first_non_zero_bit(result);

@@ -8,9 +8,9 @@
 namespace AES   {
     class SBox    {
         public:
-            static Byte Encrypt(const Byte &input_byte);
+            inline static Byte Encrypt(const Byte &input_byte)  {return s_sbox_encrypt[input_byte.GetValue()];};
 
-            static Byte Decrypt(const Byte &input_byte);
+            inline static Byte Decrypt(const Byte &input_byte)  {return s_sbox_decrypt[input_byte.GetValue()];};
 
             static void Initialize();
 

@@ -8,7 +8,7 @@
 namespace AES   {
     class Byte  {
         public:
-            Byte(unsigned char x = 0);
+            inline Byte(unsigned char x = 0)   {m_value = x;};
 
             inline unsigned char GetValue() const {return m_value;};
 
@@ -18,9 +18,9 @@ namespace AES   {
 
             inline Byte operator-(const Byte& b)    const   {return Byte(b.m_value ^ m_value);};
 
-            Byte operator*(const Byte& b)           const   {return s_multiplicative_results[m_value][b.m_value];};
+            inline Byte operator*(const Byte& b)    const   {return s_multiplicative_results[m_value][b.m_value];};
 
-            bool operator==(const Byte& b)          const   {return m_value == b.m_value;};
+            inline bool operator==(const Byte& b)   const   {return m_value == b.m_value;};
             inline bool operator>(const Byte& b)    const   {return m_value > b.m_value;};
             inline bool operator<(const Byte& b)    const   {return m_value < b.m_value;};
 

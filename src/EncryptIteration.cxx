@@ -2,6 +2,10 @@
 #include "../aes/SBox.h"
 #include "../aes/EncryptIteration.h"
 
+#include <iostream>
+#include <cstdint>
+#include <cstring>
+
 using namespace AES;
 
 
@@ -87,9 +91,11 @@ void EncryptIteration::ApplyMixMatrixEncryption(Byte *array_of_4_bytes)   {
             s_mix_matrix_temp_result[i] += s_mix_column_matrix[i][j]*array_of_4_bytes[j];
         }
     }
-    for (unsigned int i = 0; i < 4; i++)    {
-        array_of_4_bytes[i] = s_mix_matrix_temp_result[i];
-    }
+    //for (unsigned int i = 0; i < 4; i++)    {
+    //    array_of_4_bytes[i] = s_mix_matrix_temp_result[i];
+    //}
+    memcpy( array_of_4_bytes, s_mix_matrix_temp_result, 4 );
+
 };
 
 
