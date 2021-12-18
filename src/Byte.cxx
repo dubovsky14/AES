@@ -8,8 +8,10 @@ using namespace std;
 
 
 std::map<Byte, Byte> Byte::s_multiplicative_inverse_map;
+Byte  Byte::s_multiplicative_results[256][256];
 
 void Byte::Initialize() {
+    InitializeMultiplicationMap();
     s_multiplicative_inverse_map[Byte((unsigned char)(0))] = Byte((unsigned char)(0));
     for (unsigned char i = 1; i != 0; i++)    {
         // looking for inverse element
@@ -25,28 +27,6 @@ void Byte::Initialize() {
 
 Byte::Byte(unsigned char x) {
     m_value = x;
-};
-
-Byte Byte::operator+(const Byte& b)  const {
-    return Byte(b.m_value ^ m_value);
-};
-
-void Byte::operator+=(const Byte& b)      {
-    m_value = m_value ^ b.m_value;
-};
-
-Byte Byte::operator-(const Byte& b)  const {
-    return Byte(b.m_value ^ m_value);
-};
-
-Byte Byte::operator*(const Byte& b)  const {
-    unsigned short int result = multiply_without_modulo<unsigned short int>(m_value, b.m_value);
-    result = get_modulo_polynomial(result, s_modulo_polynomial);
-    return Byte((unsigned char)(result));
-};
-
-bool Byte::operator==(const Byte& b)    const {
-    return m_value == b.m_value;
 };
 
 unsigned short Byte::get_modulo_polynomial(unsigned short numerator, unsigned short denominator)  {
@@ -76,6 +56,22 @@ Byte Byte::circular_bit_shift_left(const Byte &input, unsigned int shift_size)  
 
 Byte Byte::circular_bit_shift_right(const Byte &input, unsigned int shift_size)    {
     return Byte(circular_bit_shift_right(input.m_value, shift_size));
+};
+
+Byte Byte::MultiplyBytes(const Byte& a, const Byte& b)    {
+    unsigned short int result = multiply_without_modulo<unsigned short int>(a.m_value, b.m_value);
+    result = get_modulo_polynomial(result, s_modulo_polynomial);
+    return Byte((unsigned char)(result));
+};
+
+void Byte::InitializeMultiplicationMap()    {
+    for (unsigned short i = 0; i < 256; i++)    {
+        Byte a(i);
+        for (unsigned short j = 0; j < 256; j++)    {
+            Byte b(j);
+            s_multiplicative_results[i][j] = MultiplyBytes(a,b);
+        }
+    }
 };
 
 std::vector<Byte>   AES::get_vector_of_bytes(const std::string &input_string)  {

@@ -1,6 +1,7 @@
 #include "../aes/AESHandler.h"
 
 #include "../aes/Byte.h"
+#include "../aes/SBox.h"
 #include "../aes/KeyScheduler128.h"
 #include "../aes/EncryptIteration.h"
 
@@ -11,11 +12,13 @@ using namespace AES;
 
 AESHandler::AESHandler(uint64_t key_first_half, uint64_t key_second_half)   {
     m_key_scheduler = new KeyScheduler128(key_first_half, key_second_half);
+    SBox::Initialize();
     Byte::Initialize();
 };
 
 AESHandler::AESHandler(const std::vector<Byte> &key)    {
     m_key_scheduler = new KeyScheduler128(key);
+    SBox::Initialize();
     Byte::Initialize();
 };
 

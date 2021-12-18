@@ -14,6 +14,7 @@ using namespace AES;
 
 int main(int argc, const char **argv)   {
     Byte::Initialize();
+    SBox::Initialize();
 
 
     uint64_t zero = 0;

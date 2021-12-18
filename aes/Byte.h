@@ -10,19 +10,19 @@ namespace AES   {
         public:
             Byte(unsigned char x = 0);
 
-            unsigned char GetValue() const {return m_value;};
+            inline unsigned char GetValue() const {return m_value;};
 
-            Byte operator+(const Byte& b)   const;
+            inline Byte operator+(const Byte& b)    const   {return Byte(b.m_value ^ m_value);};;
 
-            void operator+=(const Byte& b);
+            inline void operator+=(const Byte& b)           {m_value = m_value ^ b.m_value;};
 
-            Byte operator-(const Byte& b)   const;
+            inline Byte operator-(const Byte& b)    const   {return Byte(b.m_value ^ m_value);};
 
-            Byte operator*(const Byte& b)   const;
+            Byte operator*(const Byte& b)           const   {return s_multiplicative_results[m_value][b.m_value];};
 
-            bool operator==(const Byte& b)    const;
-            bool operator>(const Byte& b)    const  {return m_value > b.m_value;};
-            bool operator<(const Byte& b)    const  {return m_value < b.m_value;};
+            bool operator==(const Byte& b)          const   {return m_value == b.m_value;};
+            inline bool operator>(const Byte& b)    const   {return m_value > b.m_value;};
+            inline bool operator<(const Byte& b)    const   {return m_value < b.m_value;};
 
             static void Initialize();
 
@@ -44,6 +44,12 @@ namespace AES   {
             unsigned char m_value;
 
             static std::map<Byte, Byte> s_multiplicative_inverse_map;
+
+            static Byte  s_multiplicative_results[256][256];
+
+            static Byte MultiplyBytes(const Byte& a, const Byte& b);
+
+            static void InitializeMultiplicationMap();
 
 
     };
