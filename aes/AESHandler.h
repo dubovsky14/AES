@@ -20,6 +20,8 @@ namespace AES   {
             void Decrypt(Byte *text)  const;
             void Decrypt(const Byte *cipher_text, Byte *plain_text)   const;
 
+            static std::vector<Byte> GetByteVector(const std::string &input_text);
+
         private:
             KeyScheduler128 *m_key_scheduler    = nullptr;
 

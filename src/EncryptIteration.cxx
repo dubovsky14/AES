@@ -71,6 +71,7 @@ void EncryptIteration::ShiftRows(Byte *array_of_16_bytes, bool inverse) {
     memcpy( array_of_16_bytes, result, 16 );
 };
 
+/*
 void EncryptIteration::MixColumns(Byte *array_of_16_bytes, bool inverse)    {
     for (unsigned int i_4bytes_group = 0; i_4bytes_group < 4; i_4bytes_group++)  {
         if (!inverse)   {
@@ -90,11 +91,7 @@ void EncryptIteration::ApplyMixMatrixEncryption(Byte *array_of_4_bytes)   {
             mix_matrix_temp_result[i] += s_mix_column_matrix[i][j]*array_of_4_bytes[j];
         }
     }
-    //for (unsigned int i = 0; i < 4; i++)    {
-    //    array_of_4_bytes[i] = mix_matrix_temp_result[i];
-    //}
     memcpy( array_of_4_bytes, mix_matrix_temp_result, 4 );
-
 };
 
 
@@ -110,7 +107,7 @@ void EncryptIteration::ApplyMixMatrixDecryption(Byte *array_of_4_bytes)   {
         array_of_4_bytes[i] = mix_matrix_temp_result[i];
     }
 }
-
+*/
 void EncryptIteration::AddKey(Byte *array_of_16_bytes, const Byte *subkey)    {
     std::transform( reinterpret_cast<unsigned long long int *> (array_of_16_bytes),
                     reinterpret_cast<unsigned long long int *> (array_of_16_bytes+16),
