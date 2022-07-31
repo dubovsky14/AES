@@ -13,6 +13,10 @@ namespace AES   {
 
             KeyScheduler(uint64_t first_half, uint64_t second_half);
 
+            KeyScheduler(uint64_t key_part1, uint64_t key_part2, uint64_t key_part3);
+
+            KeyScheduler(uint64_t key_part1, uint64_t key_part2, uint64_t key_part3, uint64_t key_part4);
+
             const Byte*     GetSubKey(unsigned int interation_index)    const;
 
             static Byte     GetRCKey(unsigned int index);

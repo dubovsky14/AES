@@ -34,6 +34,24 @@ KeyScheduler::KeyScheduler(uint64_t first_half, uint64_t second_half) {
     InitializeSubkeys();
 };
 
+KeyScheduler::KeyScheduler(uint64_t key_part1, uint64_t key_part2, uint64_t key_part3)  {
+    m_primary_key = get_vector_of_bytes(key_part1, key_part2);
+    vector<Byte> key_second_part = get_vector_of_bytes(key_part3, key_part3);
+    for (unsigned int i = 0; i < 8; i++)    {
+        m_primary_key.push_back(key_second_part[i]);
+    }
+    InitializeSubkeys();
+};
+
+KeyScheduler::KeyScheduler(uint64_t key_part1, uint64_t key_part2, uint64_t key_part3, uint64_t key_part4)  {
+    m_primary_key = get_vector_of_bytes(key_part1, key_part2);
+    vector<Byte> key_second_part = get_vector_of_bytes(key_part3, key_part4);
+    for (const Byte &byte : key_second_part)    {
+        m_primary_key.push_back(byte);
+    }
+    InitializeSubkeys();
+};
+
 const Byte *KeyScheduler::GetSubKey(unsigned int interation_index)    const {
     return m_subkeys[interation_index];
 };

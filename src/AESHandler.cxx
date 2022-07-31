@@ -17,6 +17,23 @@ AESHandler::AESHandler(uint64_t key_first_half, uint64_t key_second_half)   {
     m_number_of_iterations = 10;
 };
 
+
+AESHandler::AESHandler(uint64_t key_part1, uint64_t key_part2, uint64_t key_part3)  {
+    m_key_scheduler = new KeyScheduler(key_part1, key_part2, key_part3);
+    SBox::Initialize();
+    Byte::Initialize();
+    m_number_of_iterations = 12;
+};
+
+AESHandler::AESHandler(uint64_t key_part1, uint64_t key_part2, uint64_t key_part3, uint64_t key_part4)  {
+    m_key_scheduler = new KeyScheduler(key_part1, key_part2, key_part3, key_part4);
+    SBox::Initialize();
+    Byte::Initialize();
+    m_number_of_iterations = 14;
+
+};
+
+
 AESHandler::AESHandler(const std::vector<Byte> &key)    {
     SBox::Initialize();
     Byte::Initialize();

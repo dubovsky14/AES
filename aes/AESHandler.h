@@ -10,6 +10,10 @@ namespace AES   {
         public:
             AESHandler(uint64_t key_first_half, uint64_t key_second_half);
 
+            AESHandler(uint64_t key_part1, uint64_t key_part2, uint64_t key_part3);
+
+            AESHandler(uint64_t key_part1, uint64_t key_part2, uint64_t key_part3, uint64_t key_part4);
+
             AESHandler(const std::vector<Byte> &key);
 
             ~AESHandler();
