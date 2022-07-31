@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../aes/Byte.h"
-#include "../aes/KeyScheduler128.h"
+#include "../aes/KeyScheduler.h"
 
 #include <vector>
 
@@ -22,8 +22,10 @@ namespace AES   {
 
             static std::vector<Byte> GetByteVector(const std::string &input_text);
 
+            unsigned int m_number_of_iterations = 10;
+
         private:
-            KeyScheduler128 *m_key_scheduler    = nullptr;
+            KeyScheduler *m_key_scheduler    = nullptr;
 
             template<class ValueType>
             static void copy_array(const ValueType *source, ValueType *target, size_t n_elements) {

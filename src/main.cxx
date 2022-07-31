@@ -2,7 +2,7 @@
 #include "../aes/SBox.h"
 #include "../aes/EncryptIteration.h"
 #include "../aes/HelperFunctions.h"
-#include "../aes/KeyScheduler128.h"
+#include "../aes/KeyScheduler.h"
 #include "../aes/AESHandler.h"
 
 #include <iostream>

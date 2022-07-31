@@ -5,19 +5,24 @@
 #include <vector>
 
 namespace AES   {
-    class KeyScheduler128  {
-        public:
-            KeyScheduler128(const std::vector<Byte> &key);
 
-            KeyScheduler128(uint64_t first_half, uint64_t second_half);
+    enum class KeySize{AES128bit, AES192bit, AES256bit};
+    class KeyScheduler  {
+        public:
+            KeyScheduler(const std::vector<Byte> &key);
+
+            KeyScheduler(uint64_t first_half, uint64_t second_half);
 
             const Byte*     GetSubKey(unsigned int interation_index)    const;
 
             static Byte     GetRCKey(unsigned int index);
 
+            KeySize         GetKeySize()    const {return m_key_size;};
+
         private:
             std::vector<Byte>               m_primary_key;
-            Byte                            m_subkeys[11][16];
+            Byte                            m_subkeys[15][16];
+            KeySize                         m_key_size;
 
             void InitializeSubkeys();
 
@@ -26,5 +31,11 @@ namespace AES   {
             static std::vector<Byte>   RotateWordLeft(const Byte *word, unsigned int word_size = 4, unsigned int shift_size = 1);
 
             static std::vector<Byte>   GFunction(const Byte *word, const Byte &rc_key);
+
+            static unsigned int get_n_subkeys(KeySize key_size);
+
+            static unsigned int get_n_key_words(KeySize key_size);
+
+            static unsigned int get_n_key_schedule_iterations(KeySize key_size);
     };
 }

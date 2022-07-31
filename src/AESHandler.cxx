@@ -2,7 +2,7 @@
 
 #include "../aes/Byte.h"
 #include "../aes/SBox.h"
-#include "../aes/KeyScheduler128.h"
+#include "../aes/KeyScheduler.h"
 #include "../aes/EncryptIteration.h"
 
 #include <vector>
@@ -11,15 +11,31 @@ using namespace std;
 using namespace AES;
 
 AESHandler::AESHandler(uint64_t key_first_half, uint64_t key_second_half)   {
-    m_key_scheduler = new KeyScheduler128(key_first_half, key_second_half);
+    m_key_scheduler = new KeyScheduler(key_first_half, key_second_half);
     SBox::Initialize();
     Byte::Initialize();
+    m_number_of_iterations = 10;
 };
 
 AESHandler::AESHandler(const std::vector<Byte> &key)    {
-    m_key_scheduler = new KeyScheduler128(key);
     SBox::Initialize();
     Byte::Initialize();
+
+    if (key.size() == 16)    {      // 128 bin key
+        m_number_of_iterations = 10;
+        m_key_scheduler = new KeyScheduler(key);
+    }
+    else if (key.size() == 24)    { // 192 bit key
+        m_number_of_iterations = 12;
+        m_key_scheduler = new KeyScheduler(key);
+    }
+    else if (key.size() == 32)  {   // 256 bit key
+        m_number_of_iterations = 14;
+        m_key_scheduler = new KeyScheduler(key);
+    }
+    else {
+        throw std::string("Key length does not match any of the supported AES alternatives: 128, 192 or 256 bin lenght.");
+    }
 };
 
 AESHandler::~AESHandler()   {
@@ -28,10 +44,10 @@ AESHandler::~AESHandler()   {
 
 void AESHandler::Encrypt(Byte *text)  const {
     EncryptIteration::AddKey(text, m_key_scheduler->GetSubKey(0));
-    for (unsigned int i_encryption_iter = 1; i_encryption_iter < 10; i_encryption_iter++)   {
+    for (unsigned int i_encryption_iter = 1; i_encryption_iter < m_number_of_iterations; i_encryption_iter++)   {
         EncryptIteration::Encrypt(text, m_key_scheduler->GetSubKey(i_encryption_iter), true);
     }
-    EncryptIteration::Encrypt(text, m_key_scheduler->GetSubKey(10), false);
+    EncryptIteration::Encrypt(text, m_key_scheduler->GetSubKey(m_number_of_iterations), false);
 
 };
 
@@ -41,9 +57,9 @@ void AESHandler::Encrypt(const Byte *plain_text, Byte *cipher_text) const {
 };
 
 void AESHandler::Decrypt(Byte *text)  const {
-    EncryptIteration::Decrypt(text, m_key_scheduler->GetSubKey(10), false);
-    for (unsigned int i_encryption_iter = 1; i_encryption_iter < 10; i_encryption_iter++)   {
-        EncryptIteration::Decrypt(text, m_key_scheduler->GetSubKey(10-i_encryption_iter), true);
+    EncryptIteration::Decrypt(text, m_key_scheduler->GetSubKey(m_number_of_iterations), false);
+    for (unsigned int i_encryption_iter = 1; i_encryption_iter < m_number_of_iterations; i_encryption_iter++)   {
+        EncryptIteration::Decrypt(text, m_key_scheduler->GetSubKey(m_number_of_iterations-i_encryption_iter), true);
     }
     EncryptIteration::AddKey(text, m_key_scheduler->GetSubKey(0));
 
