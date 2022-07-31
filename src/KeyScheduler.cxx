@@ -43,20 +43,23 @@ void KeyScheduler::InitializeSubkeys()   {
     const unsigned int n_key_words = get_n_key_words(m_key_size);
     const unsigned int n_key_schedule_iterations = get_n_key_schedule_iterations(m_key_size);
 
-    Byte    iterations_results[n_key_schedule_iterations*n_key_words*4];
+    Byte    iterations_results[(n_key_schedule_iterations+1)*n_key_words*4];
 
     memcpy(iterations_results, &m_primary_key[0], m_primary_key.size());
 
-    for (unsigned int i_iter = 1; i_iter < n_key_schedule_iterations; i_iter++)   {
-        memcpy(&iterations_results[i_iter*n_key_words*4], &iterations_results[(i_iter-1)*n_key_words*4], m_primary_key.size());
-        vector<Byte> g_function_result = GFunction(&iterations_results[i_iter*n_key_words*4 - 4], GetRCKey(i_iter));
+    for (unsigned int i_iter = 1; i_iter <= n_key_schedule_iterations; i_iter++)   {
+        const unsigned int subresult_start_pos = i_iter*n_key_words*4;
+        memcpy(&iterations_results[subresult_start_pos], &iterations_results[subresult_start_pos - m_primary_key.size()], m_primary_key.size());
+        vector<Byte> g_function_result = GFunction(&iterations_results[subresult_start_pos - 4], GetRCKey(i_iter));
 
         // first word
-        memcpy(&iterations_results[i_iter*n_key_words*4], &g_function_result[0], 4);
+        for (unsigned int i_byte = 0; i_byte<4; i_byte++)   {
+            iterations_results[subresult_start_pos + i_byte] += g_function_result[i_byte];
+        }
 
-        for (unsigned int i_word = 1; i_word<4; i_word++)   {
+        for (unsigned int i_word = 1; i_word<n_key_words; i_word++)   {
             for (unsigned int i_byte = 0; i_byte<4; i_byte++)   {
-                iterations_results[i_iter*n_key_words*4 + i_word*4 + i_byte] += iterations_results[i_iter*n_key_words*4 + (i_word-1)*4 + i_byte];
+                iterations_results[subresult_start_pos + i_word*4 + i_byte] += iterations_results[subresult_start_pos + (i_word-1)*4 + i_byte];
             }
         }
     }

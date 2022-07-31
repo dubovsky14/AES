@@ -34,7 +34,7 @@ AESHandler::AESHandler(const std::vector<Byte> &key)    {
         m_key_scheduler = new KeyScheduler(key);
     }
     else {
-        throw std::string("Key length does not match any of the supported AES alternatives: 128, 192 or 256 bin lenght.");
+        throw std::string("Key length does not match any of the supported AES alternatives: 128, 192 or 256 bin length.");
     }
 };
 
