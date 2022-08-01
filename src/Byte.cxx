@@ -80,14 +80,11 @@ std::vector<Byte>   AES::get_vector_of_bytes(const std::string &input_string)  {
     return result;
 };
 
-std::vector<Byte>   AES::get_vector_of_bytes(uint64_t first_half, uint64_t second_half)  {
-    vector<Byte> result;
-    result.resize(16);
+std::vector<Byte> AES::get_vector_of_bytes(uint64_t number) {
+    std::vector<Byte> result;
+    result.resize(8);
     for (unsigned int i = 0; i < 8; i++)   {
-        result[15-i] = Byte((unsigned char)(second_half >> i*8));
-    }
-    for (unsigned int i = 0; i < 8; i++)   {
-        result[7-i] = Byte((unsigned char)(first_half >> i*8));
+        result[7-i] = Byte((unsigned char)(number >> i*8));
     }
     return result;
 };

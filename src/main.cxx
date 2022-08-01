@@ -16,16 +16,13 @@ int main(int argc, const char **argv)   {
     Byte::Initialize();
     SBox::Initialize();
 
-
-
-
-
     uint64_t zero = 0;
     uint64_t one = 1;
-    vector<Byte> key            = get_vector_of_bytes(one, zero);
+    vector<Byte> key            = get_vector_of_bytes(zero, zero, zero, one);
     vector<Byte> plain_text     = get_vector_of_bytes(zero, one);
 
-    AESHandler aes_handler(zero, zero, zero, one);
+
+    AESHandler aes_handler(key);
     vector<Byte> cipher_text = plain_text;
     aes_handler.Encrypt(&cipher_text[0]);
     vector<Byte> decrypted_text = cipher_text;

@@ -79,5 +79,15 @@ namespace AES   {
 
     std::vector<Byte>   get_vector_of_bytes(const std::string &input_string);
 
-    std::vector<Byte>   get_vector_of_bytes(uint64_t first_half, uint64_t second_half);
+    std::vector<Byte> get_vector_of_bytes(uint64_t number);
+
+    template<typename T, typename ... Args>
+    std::vector<Byte> get_vector_of_bytes(T x1, Args ... args) {
+        std::vector<Byte> result = get_vector_of_bytes(x1);
+        std::vector<Byte> args_byte_vector = get_vector_of_bytes(args ...);
+        for (const Byte &x : args_byte_vector)    {
+            result.push_back(x);
+        }
+        return result;
+    };
 }
