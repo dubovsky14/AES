@@ -31,6 +31,7 @@ KeyScheduler::KeyScheduler(const std::vector<Byte> &key)  {
 
 KeyScheduler::KeyScheduler(uint64_t first_half, uint64_t second_half) {
     m_primary_key = get_vector_of_bytes(first_half, second_half);
+    m_key_size = KeySize::AES128bit;
     InitializeSubkeys();
 };
 
@@ -40,6 +41,7 @@ KeyScheduler::KeyScheduler(uint64_t key_part1, uint64_t key_part2, uint64_t key_
     for (unsigned int i = 0; i < 8; i++)    {
         m_primary_key.push_back(key_second_part[i]);
     }
+    m_key_size = KeySize::AES192bit;
     InitializeSubkeys();
 };
 
@@ -49,6 +51,7 @@ KeyScheduler::KeyScheduler(uint64_t key_part1, uint64_t key_part2, uint64_t key_
     for (const Byte &byte : key_second_part)    {
         m_primary_key.push_back(byte);
     }
+    m_key_size = KeySize::AES256bit;
     InitializeSubkeys();
 };
 

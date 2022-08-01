@@ -25,7 +25,7 @@ int main(int argc, const char **argv)   {
     vector<Byte> key            = get_vector_of_bytes(one, zero);
     vector<Byte> plain_text     = get_vector_of_bytes(zero, one);
 
-    AESHandler aes_handler(key);
+    AESHandler aes_handler(zero, zero, zero, one);
     vector<Byte> cipher_text = plain_text;
     aes_handler.Encrypt(&cipher_text[0]);
     vector<Byte> decrypted_text = cipher_text;
