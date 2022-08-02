@@ -25,9 +25,9 @@ int main(int argc, const char **argv)   {
         uint64_t zero = 0;
         uint64_t one = 1;
         vector<Byte> key            = get_vector_of_bytes(zero, zero, zero, one);
-        vector<Byte> IV             = get_vector_of_bytes(zero, one);
-
         FileEncryptor file_encryptor(key);
+
+        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
         if (string(argv[1]) == "encrypt")   {
             cout << "Running encryption\n";
             file_encryptor.EncryptFile(argv[2], argv[3]);
@@ -37,41 +37,15 @@ int main(int argc, const char **argv)   {
             file_encryptor.DecryptFile(argv[2], argv[3]);
         }
         cout << endl;
-        return 0;
-
-
-        vector<Byte> plain_text     = get_vector_of_bytes(zero, one);
-        AESHandler aes_handler(key);
-        vector<Byte> cipher_text = plain_text;
-        aes_handler.Encrypt(&cipher_text[0]);
-        vector<Byte> decrypted_text = cipher_text;
-        aes_handler.Decrypt(&decrypted_text[0]);
-
-        cout << "key \t\t= ";
-        print_out_byte_vector(key);
-        cout << "\nplain text \t= ";
-        print_out_byte_vector(plain_text);
-        cout << "\ncipher text \t= ";
-        print_out_byte_vector(cipher_text);
-        cout << "\ndecrypted text \t= ";
-        print_out_byte_vector(decrypted_text);
-        cout << endl;
-
-
-        const long long int number_of_blocks = 100000000;
-        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-        for (unsigned long long int i = 0; i < number_of_blocks; i++)  {
-            aes_handler.Encrypt(&cipher_text[0]);
-        }
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-        unsigned int dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
-        std::cout << "Time difference = " << std::dec << dt << "[ms]" << std::endl;
-        std::cout << "Encryption speed = " << (16.*number_of_blocks/(dt/1000.))/1000000. << " MB/s" <<  endl;
+        float dt = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count()/1000.;
+        uint64_t file_size = FileEncryptor::get_file_size(argv[2]);
+        std::cout << "Encryption(decryption) time = " << std::dec << dt << " s" << std::endl;
+        std::cout << "Encryption speed = " << (file_size/dt)/(1024.*1024.) << " MB/s" <<  endl;
 
-        cout << "\ncipher text \t= ";
-        print_out_byte_vector(cipher_text);
-        cout << endl;
+
         return 0;
+
     }
     catch (const std::string &e)    {
         cout << e << endl;
