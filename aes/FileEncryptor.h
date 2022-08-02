@@ -37,5 +37,7 @@ namespace AES   {
 
             static void PrintOutBuffer(const unsigned char *buffer);
 
+            static uint64_t get_file_size(const std::string &file_address);
+
     };
 }
