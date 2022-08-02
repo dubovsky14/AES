@@ -39,7 +39,11 @@ namespace AES   {
 
             static uint64_t get_file_size(const std::string &file_address);
 
-            static void add_two_128bit_chunks(const unsigned char *x1, const unsigned char *x2, unsigned char *result);
+            template<class X1, class X2, class Result>
+            static void add_two_128bit_chunks(const X1 *x1, const X2 *x2, Result *result)  {
+                *(reinterpret_cast<uint64_t *>(&result[0])) = *(reinterpret_cast<const uint64_t *>(&x1[0])) ^ *(reinterpret_cast<const uint64_t *>(&x2[0]));
+                *(reinterpret_cast<uint64_t *>(&result[8])) = *(reinterpret_cast<const uint64_t *>(&x1[8])) ^ *(reinterpret_cast<const uint64_t *>(&x2[8]));
+            };
 
     };
 }

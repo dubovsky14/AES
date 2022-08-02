@@ -90,8 +90,7 @@ void    FileEncryptor::Encrypt(const unsigned char *data, const Byte *vector_to_
     memcpy(m_temp_input, data, 16);
 
     // Add initial vector
-    *(reinterpret_cast<uint64_t *>(&m_temp_input[0])) = *(reinterpret_cast<uint64_t *>(&m_temp_input[0])) ^ *(reinterpret_cast<const uint64_t *>(&vector_to_add[0]));
-    *(reinterpret_cast<uint64_t *>(&m_temp_input[8])) = *(reinterpret_cast<uint64_t *>(&m_temp_input[8])) ^ *(reinterpret_cast<const uint64_t *>(&vector_to_add[8]));
+    add_two_128bit_chunks(m_temp_input, vector_to_add, m_temp_input);
 
     m_aes_handler->Encrypt(m_temp_input, m_temp_result);
 };
@@ -101,9 +100,7 @@ void    FileEncryptor::Decrypt(const unsigned char *data, const Byte *vector_to_
     m_aes_handler->Decrypt(reinterpret_cast<const Byte *> (data), m_temp_result);
 
     // Add initial vector
-    *(reinterpret_cast<uint64_t *>(&m_temp_result[0])) = *(reinterpret_cast<uint64_t *>(&m_temp_result[0])) ^ *(reinterpret_cast<const uint64_t *>(&vector_to_add[0]));
-    *(reinterpret_cast<uint64_t *>(&m_temp_result[8])) = *(reinterpret_cast<uint64_t *>(&m_temp_result[8])) ^ *(reinterpret_cast<const uint64_t *>(&vector_to_add[8]));
-
+    add_two_128bit_chunks(m_temp_result, vector_to_add, m_temp_result);
 };
 
 
@@ -120,9 +117,4 @@ uint64_t FileEncryptor::get_file_size(const std::string &file_address) {
     const auto end = file.tellg();
     file.close();
     return (end-begin);
-};
-
-void FileEncryptor::add_two_128bit_chunks(const unsigned char *x1, const unsigned char *x2, unsigned char *result)  {
-    *(reinterpret_cast<uint64_t *>(&result[0])) = *(reinterpret_cast<const uint64_t *>(&x1[0])) ^ *(reinterpret_cast<const uint64_t *>(&x2[0]));
-    *(reinterpret_cast<uint64_t *>(&result[8])) = *(reinterpret_cast<const uint64_t *>(&x1[8])) ^ *(reinterpret_cast<const uint64_t *>(&x2[8]));
 };
