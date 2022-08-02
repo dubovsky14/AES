@@ -4,6 +4,7 @@
 #include "../aes/HelperFunctions.h"
 #include "../aes/KeyScheduler.h"
 #include "../aes/AESHandler.h"
+#include "../aes/FileEncryptor.h"
 
 #include <iostream>
 #include <string>
@@ -16,12 +17,26 @@ int main(int argc, const char **argv)   {
     Byte::Initialize();
     SBox::Initialize();
 
+
+
     uint64_t zero = 0;
     uint64_t one = 1;
     vector<Byte> key            = get_vector_of_bytes(zero, zero, zero, one);
+
+    FileEncryptor file_encryptor(key);
+    if (string(argv[1]) == "encrypt")   {
+        cout << "Running encryption\n";
+        file_encryptor.EncryptFile(argv[2], argv[3]);
+    }
+    else    {
+        cout << "Running decryption\n";
+        file_encryptor.DecryptFile(argv[2], argv[3]);
+    }
+    cout << endl;
+    return 0;
+
+
     vector<Byte> plain_text     = get_vector_of_bytes(zero, one);
-
-
     AESHandler aes_handler(key);
     vector<Byte> cipher_text = plain_text;
     aes_handler.Encrypt(&cipher_text[0]);

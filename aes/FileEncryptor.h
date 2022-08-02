@@ -35,5 +35,7 @@ namespace AES   {
 
             void    Decrypt(const unsigned char *data, const Byte *vector_to_add);
 
+            static void PrintOutBuffer(const unsigned char *buffer);
+
     };
 }
