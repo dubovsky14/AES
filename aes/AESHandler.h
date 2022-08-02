@@ -21,6 +21,9 @@ namespace AES   {
             void Encrypt(Byte *text)  const;
             void Encrypt(const Byte *plain_text, Byte *cipher_text) const;
 
+            void Encrypt(unsigned char *text)  const;
+            void Encrypt(const unsigned char *plain_text, unsigned char *cipher_text) const;
+
             void Decrypt(Byte *text)  const;
             void Decrypt(const Byte *cipher_text, Byte *plain_text)   const;
 

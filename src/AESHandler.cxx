@@ -73,6 +73,15 @@ void AESHandler::Encrypt(const Byte *plain_text, Byte *cipher_text) const {
     Encrypt(cipher_text);
 };
 
+void AESHandler::Encrypt(unsigned char *text)  const {
+    Encrypt(reinterpret_cast<Byte *>(text));
+};
+
+void AESHandler::Encrypt(const unsigned char *plain_text, unsigned char *cipher_text) const {
+    copy_array(plain_text, cipher_text, 16);
+    Encrypt(cipher_text);
+};
+
 void AESHandler::Decrypt(Byte *text)  const {
     EncryptIteration::Decrypt(text, m_key_scheduler->GetSubKey(m_number_of_iterations), false);
     for (unsigned int i_encryption_iter = 1; i_encryption_iter < m_number_of_iterations; i_encryption_iter++)   {
