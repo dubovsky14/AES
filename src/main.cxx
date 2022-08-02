@@ -16,12 +16,6 @@ using namespace AES;
 int main(int argc, const char **argv)   {
 
     try {
-
-        Byte::Initialize();
-        SBox::Initialize();
-
-
-
         uint64_t zero = 0;
         uint64_t one = 1;
         vector<Byte> key            = get_vector_of_bytes(zero, zero, zero, one);

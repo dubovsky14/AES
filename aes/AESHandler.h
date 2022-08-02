@@ -4,6 +4,7 @@
 #include "../aes/KeyScheduler.h"
 
 #include <vector>
+#include <memory>
 
 namespace AES   {
     class AESHandler    {
@@ -15,8 +16,6 @@ namespace AES   {
             AESHandler(uint64_t key_part1, uint64_t key_part2, uint64_t key_part3, uint64_t key_part4);
 
             AESHandler(const std::vector<Byte> &key);
-
-            ~AESHandler();
 
             void Encrypt(Byte *text)  const;
             void Encrypt(const Byte *plain_text, Byte *cipher_text) const;
@@ -32,7 +31,9 @@ namespace AES   {
             unsigned int m_number_of_iterations = 10;
 
         private:
-            KeyScheduler *m_key_scheduler    = nullptr;
+            std::shared_ptr<KeyScheduler> m_key_scheduler    = nullptr;
+
+            void Initialize(const std::vector<Byte> &key);
 
             template<class ValueType>
             static void copy_array(const ValueType *source, ValueType *target, size_t n_elements) {

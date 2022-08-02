@@ -11,53 +11,46 @@ using namespace std;
 using namespace AES;
 
 AESHandler::AESHandler(uint64_t key_first_half, uint64_t key_second_half)   {
-    m_key_scheduler = new KeyScheduler(key_first_half, key_second_half);
-    SBox::Initialize();
-    Byte::Initialize();
-    m_number_of_iterations = 10;
+    vector<Byte> key = get_vector_of_bytes(key_first_half, key_second_half);
+    Initialize(key);
 };
 
 
 AESHandler::AESHandler(uint64_t key_part1, uint64_t key_part2, uint64_t key_part3)  {
-    m_key_scheduler = new KeyScheduler(key_part1, key_part2, key_part3);
-    SBox::Initialize();
-    Byte::Initialize();
-    m_number_of_iterations = 12;
+    vector<Byte> key = get_vector_of_bytes(key_part1, key_part2, key_part3);
+    Initialize(key);
 };
 
 AESHandler::AESHandler(uint64_t key_part1, uint64_t key_part2, uint64_t key_part3, uint64_t key_part4)  {
-    m_key_scheduler = new KeyScheduler(key_part1, key_part2, key_part3, key_part4);
-    SBox::Initialize();
-    Byte::Initialize();
-    m_number_of_iterations = 14;
-
+    vector<Byte> key = get_vector_of_bytes(key_part1, key_part2, key_part3, key_part4);
+    Initialize(key);
 };
 
 
 AESHandler::AESHandler(const std::vector<Byte> &key)    {
-    SBox::Initialize();
+    Initialize(key);
+};
+
+void AESHandler::Initialize(const std::vector<Byte> &key)   {
     Byte::Initialize();
+    SBox::Initialize();
 
     if (key.size() == 16)    {      // 128 bin key
         m_number_of_iterations = 10;
-        m_key_scheduler = new KeyScheduler(key);
+        m_key_scheduler = std::make_shared<KeyScheduler>(key);
     }
     else if (key.size() == 24)    { // 192 bit key
         m_number_of_iterations = 12;
-        m_key_scheduler = new KeyScheduler(key);
+        m_key_scheduler = std::make_shared<KeyScheduler>(key);
     }
     else if (key.size() == 32)  {   // 256 bit key
         m_number_of_iterations = 14;
-        m_key_scheduler = new KeyScheduler(key);
+        m_key_scheduler = std::make_shared<KeyScheduler>(key);
     }
     else {
         throw std::string("Key length does not match any of the supported AES alternatives: 128, 192 or 256 bin length.");
     }
-};
-
-AESHandler::~AESHandler()   {
-    delete m_key_scheduler;
-};
+}
 
 void AESHandler::Encrypt(Byte *text)  const {
     EncryptIteration::AddKey(text, m_key_scheduler->GetSubKey(0));
