@@ -35,7 +35,7 @@ void AESHandler::Initialize(const std::vector<Byte> &key)   {
     Byte::Initialize();
     SBox::Initialize();
 
-    if (key.size() == 16)    {      // 128 bin key
+    if (key.size() == 16)    {      // 128 bit key
         m_number_of_iterations = 10;
         m_key_scheduler = std::make_shared<KeyScheduler>(key);
     }

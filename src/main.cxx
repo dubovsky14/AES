@@ -16,19 +16,33 @@ using namespace AES;
 int main(int argc, const char **argv)   {
 
     try {
+        if (argc != 4)   {
+            throw std::string("Exactly 3 input arguments are required:\n  1st = action (encrypt or decrypt)\n  2nd = input file\n  3rd = output file");
+        }
+
         uint64_t zero = 0;
         uint64_t one = 1;
-        vector<Byte> key            = get_vector_of_bytes(zero, zero, zero, one);
+        vector<Byte> key            = get_vector_of_bytes(zero, one);
         FileEncryptor file_encryptor(key);
 
         std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-        if (string(argv[1]) == "encrypt")   {
+        std::string action = to_upper_copy(argv[1]);
+
+        if (action == "ENCRYPT")   {
             cout << "Running encryption\n";
+            cout << "Source: " << argv[2] << endl;
+            cout << "Target: " << argv[3] << endl;
+
             file_encryptor.EncryptFile(argv[2], argv[3]);
         }
-        else    {
+        else if (action == "DECRYPT")  {
             cout << "Running decryption\n";
+            cout << "Source: " << argv[2] << endl;
+            cout << "Target: " << argv[3] << endl;
             file_encryptor.DecryptFile(argv[2], argv[3]);
+        }
+        else {
+            throw std::string("Unkown action: " + action);
         }
         cout << endl;
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
