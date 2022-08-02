@@ -9,12 +9,16 @@
 
 namespace AES   {
     class FileEncryptor {
+        /** Class responsible for file encryption.
+         *   In encryption step it creates an encrypted file. First 16 bytes of data in that file is size of the original file (saved as uint64_t), followed by the encrypted content of the file
+         *
+        */
         public:
             FileEncryptor(const std::vector<Byte> &key);
 
-            void SetInitialVector(const std::vector<Byte> &iv);
+            void EnableInitialVector()      {m_use_initial_vector = true;};
 
-            void SetInitialVector(uint64_t iv1, u_int64_t iv2);
+            void DisableInitialVector()     {m_use_initial_vector = false;};
 
             void EncryptFile(const std::string &input_file_address, const std::string &output_file_address);
 
@@ -27,6 +31,8 @@ namespace AES   {
                                                         Byte(0),Byte(0),Byte(0),Byte(0)};
 
             std::shared_ptr<AESHandler> m_aes_handler = nullptr;
+
+            bool    m_use_initial_vector = true;
 
             Byte    m_temp_input[16];   // array to store teporary input for encryption/decryption
             Byte    m_temp_result[16];  // array to store temporary result of encryption/decryption of one 128-bit block
@@ -44,6 +50,14 @@ namespace AES   {
                 *(reinterpret_cast<uint64_t *>(&result[0])) = *(reinterpret_cast<const uint64_t *>(&x1[0])) ^ *(reinterpret_cast<const uint64_t *>(&x2[0]));
                 *(reinterpret_cast<uint64_t *>(&result[8])) = *(reinterpret_cast<const uint64_t *>(&x1[8])) ^ *(reinterpret_cast<const uint64_t *>(&x2[8]));
             };
+
+
+            void SetInitialVector(const std::vector<Byte> &iv);
+
+            void SetInitialVector(uint64_t iv1, u_int64_t iv2);
+
+            // Set current time as initial vector
+            void SetInitialVector();
 
     };
 }

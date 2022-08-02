@@ -28,7 +28,6 @@ int main(int argc, const char **argv)   {
         vector<Byte> IV             = get_vector_of_bytes(zero, one);
 
         FileEncryptor file_encryptor(key);
-        file_encryptor.SetInitialVector(IV);
         if (string(argv[1]) == "encrypt")   {
             cout << "Running encryption\n";
             file_encryptor.EncryptFile(argv[2], argv[3]);
