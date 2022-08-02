@@ -31,14 +31,14 @@ void FileEncryptor::EncryptFile(const std::string &input_file_address, const std
     ofstream output_file(output_file_address, std::ios::binary | std::ios::out);
 
     output_file << file_size;
-    cout << "File size = " << file_size << endl;
+    Byte initial_vector[16];
+    memcpy(initial_vector, &m_initial_vector[0], 16);
     while(input_file.good())    {
         input_file  >> std::noskipws
                     >> input_buffer[0] >> input_buffer[1] >> input_buffer[2] >> input_buffer[3] >> input_buffer[4] >> input_buffer[5] >> input_buffer[6] >> input_buffer[7]
                     >> input_buffer[8] >> input_buffer[9] >> input_buffer[10] >> input_buffer[11] >> input_buffer[12] >> input_buffer[13] >> input_buffer[14] >> input_buffer[15];
-        //PrintOutBuffer(input_buffer);
-        Encrypt(input_buffer, &m_initial_vector[0]);
-        //PrintOutBuffer(reinterpret_cast<const unsigned char*> (m_temp_result));
+        Encrypt(input_buffer, &initial_vector[0]);
+        memcpy(initial_vector, m_temp_result, 16);
         output_file  << std::noskipws << (m_temp_result[0]).GetValue() << (m_temp_result[1]).GetValue() << (m_temp_result[2]).GetValue() << (m_temp_result[3]).GetValue() << (m_temp_result[4]).GetValue() << (m_temp_result[5]).GetValue() << (m_temp_result[6]).GetValue() << (m_temp_result[7]).GetValue()
                      << (m_temp_result[8]).GetValue() << (m_temp_result[9]).GetValue() << (m_temp_result[10]).GetValue() << (m_temp_result[11]).GetValue() << (m_temp_result[12]).GetValue() << (m_temp_result[13]).GetValue() << (m_temp_result[14]).GetValue() << (m_temp_result[15]).GetValue();
     }
@@ -57,13 +57,14 @@ void FileEncryptor::DecryptFile(const std::string &input_file_address, const std
 
     const uint64_t number_of_128bit_chunks = file_size/16;
     const short number_of_bytes_in_last_chunk = file_size - number_of_128bit_chunks*16;
+    Byte initial_vector[16];
+    memcpy(initial_vector, &m_initial_vector[0], 16);
     for (uint64_t i_128bit_chunk = 0; i_128bit_chunk < number_of_128bit_chunks; i_128bit_chunk++)   {
         input_file  >> std::noskipws
                     >> input_buffer[0] >> input_buffer[1] >> input_buffer[2] >> input_buffer[3] >> input_buffer[4] >> input_buffer[5] >> input_buffer[6] >> input_buffer[7]
                     >> input_buffer[8] >> input_buffer[9] >> input_buffer[10] >> input_buffer[11] >> input_buffer[12] >> input_buffer[13] >> input_buffer[14] >> input_buffer[15];
-        //PrintOutBuffer(input_buffer);
-        Decrypt(input_buffer, &m_initial_vector[0]);
-        //PrintOutBuffer(reinterpret_cast<const unsigned char*> (m_temp_result));
+        Decrypt(input_buffer, &initial_vector[0]);
+        memcpy(initial_vector, input_buffer, 16);
 
         output_file  << std::noskipws
                      << (m_temp_result[0]).GetValue() << (m_temp_result[1]).GetValue() << (m_temp_result[2]).GetValue() << (m_temp_result[3]).GetValue() << (m_temp_result[4]).GetValue() << (m_temp_result[5]).GetValue() << (m_temp_result[6]).GetValue() << (m_temp_result[7]).GetValue()
@@ -74,9 +75,7 @@ void FileEncryptor::DecryptFile(const std::string &input_file_address, const std
         input_file  >> std::noskipws
                     >> input_buffer[0] >> input_buffer[1] >> input_buffer[2] >> input_buffer[3] >> input_buffer[4] >> input_buffer[5] >> input_buffer[6] >> input_buffer[7]
                     >> input_buffer[8] >> input_buffer[9] >> input_buffer[10] >> input_buffer[11] >> input_buffer[12] >> input_buffer[13] >> input_buffer[14] >> input_buffer[15];
-        //PrintOutBuffer(input_buffer);
         Decrypt(input_buffer, &m_initial_vector[0]);
-        //PrintOutBuffer(reinterpret_cast<const unsigned char*> (m_temp_result));
         for (short i_byte = 0; i_byte < number_of_bytes_in_last_chunk; i_byte++)  {
             output_file  << std::noskipws << (m_temp_result[i_byte]).GetValue();
         }
@@ -121,4 +120,9 @@ uint64_t FileEncryptor::get_file_size(const std::string &file_address) {
     const auto end = file.tellg();
     file.close();
     return (end-begin);
+};
+
+void FileEncryptor::add_two_128bit_chunks(const unsigned char *x1, const unsigned char *x2, unsigned char *result)  {
+    *(reinterpret_cast<uint64_t *>(&result[0])) = *(reinterpret_cast<const uint64_t *>(&x1[0])) ^ *(reinterpret_cast<const uint64_t *>(&x2[0]));
+    *(reinterpret_cast<uint64_t *>(&result[8])) = *(reinterpret_cast<const uint64_t *>(&x1[8])) ^ *(reinterpret_cast<const uint64_t *>(&x2[8]));
 };
