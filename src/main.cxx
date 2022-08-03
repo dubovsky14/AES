@@ -20,23 +20,26 @@ int main(int argc, const char **argv)   {
             throw std::string("Exactly 3 input arguments are required:\n  1st = action (encrypt or decrypt)\n  2nd = input file\n  3rd = output file");
         }
 
-        uint64_t zero = 0;
-        uint64_t one = 1;
-        vector<Byte> key            = get_vector_of_bytes(zero, one);
+        cout << "Type the key: ";
+        std::string key_string;
+        cin >> key_string;
+        vector<Byte> key            = GetKeyByteVector(key_string);
+
         FileEncryptor file_encryptor(key);
+        string encryption_type = to_string(8*key.size()) + " bit AES";
 
         std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
         std::string action = to_upper_copy(argv[1]);
 
         if (action == "ENCRYPT")   {
-            cout << "Running encryption\n";
+            cout << "Running " + encryption_type + " encryption\n";
             cout << "Source: " << argv[2] << endl;
             cout << "Target: " << argv[3] << endl;
 
             file_encryptor.EncryptFile(argv[2], argv[3]);
         }
         else if (action == "DECRYPT")  {
-            cout << "Running decryption\n";
+            cout << "Running " + encryption_type + " decryption\n";
             cout << "Source: " << argv[2] << endl;
             cout << "Target: " << argv[3] << endl;
             file_encryptor.DecryptFile(argv[2], argv[3]);

@@ -23,3 +23,26 @@ std::string  AES::to_upper_copy(const std::string &input_string)  {
     AES::to_upper(&result);
     return result;
 };
+
+std::vector<Byte>   AES::GetKeyByteVector(const std::string &key_string) {
+    vector<Byte> key            = get_vector_of_bytes(key_string);
+    if (key.size() <= 16)    {
+        while (key.size() < 16) {
+            key.push_back(Byte(0));
+        }
+    }
+    else if  (key.size() <= 24)    {
+        while (key.size() < 24) {
+            key.push_back(Byte(0));
+        }
+    }
+    else if  (key.size() <= 32)    {
+        while (key.size() < 32) {
+            key.push_back(Byte(0));
+        }
+    }
+    else {
+        key.resize(32);
+    }
+    return key;
+};

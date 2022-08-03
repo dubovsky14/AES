@@ -11,4 +11,6 @@ namespace AES   {
     void to_upper(std::string *input_string);
 
     std::string  to_upper_copy(const std::string &input_string);
+
+    std::vector<Byte>   GetKeyByteVector(const std::string &key_string);
 }
