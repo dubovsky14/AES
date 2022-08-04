@@ -96,7 +96,7 @@ void FileEncryptor::DecryptFile(const std::string &input_file_address, const std
         input_file  >> std::noskipws
                     >> input_buffer[0] >> input_buffer[1] >> input_buffer[2] >> input_buffer[3] >> input_buffer[4] >> input_buffer[5] >> input_buffer[6] >> input_buffer[7]
                     >> input_buffer[8] >> input_buffer[9] >> input_buffer[10] >> input_buffer[11] >> input_buffer[12] >> input_buffer[13] >> input_buffer[14] >> input_buffer[15];
-        Decrypt(input_buffer, &m_initial_vector[0]);
+        Decrypt(input_buffer, &initial_vector[0]);
         for (short i_byte = 0; i_byte < number_of_bytes_in_last_chunk; i_byte++)  {
             output_file  << std::noskipws << (m_temp_result[i_byte]).GetValue();
         }
