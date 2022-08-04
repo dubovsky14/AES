@@ -28,8 +28,6 @@ namespace AES   {
 
             static std::vector<Byte> GetByteVector(const std::string &input_text);
 
-            unsigned int m_number_of_iterations = 10;
-
         private:
             std::shared_ptr<KeyScheduler> m_key_scheduler    = nullptr;
 
@@ -41,5 +39,7 @@ namespace AES   {
                     target[i] = source[i];
                 }
             }
+
+            unsigned int m_number_of_iterations = 10;
     };
 }

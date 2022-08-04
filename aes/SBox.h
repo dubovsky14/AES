@@ -3,7 +3,6 @@
 #include "../aes/Byte.h"
 
 #include <vector>
-#include <map>
 
 namespace AES   {
     class SBox    {

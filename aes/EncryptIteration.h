@@ -12,7 +12,6 @@ namespace AES   {
 
             static void Decrypt(Byte *array_of_16_bytes, const Byte *subkey, bool mix_columns);
 
-        //private:
             static void SubstituteBytesEncryption(Byte *array_of_16_bytes);
 
             static void SubstituteBytesDecryption(Byte *array_of_16_bytes);
