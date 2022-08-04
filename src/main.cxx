@@ -16,13 +16,18 @@ using namespace AES;
 int main(int argc, const char **argv)   {
 
     try {
-        if (argc != 4)   {
-            throw std::string("Exactly 3 input arguments are required:\n  1st = action (encrypt or decrypt)\n  2nd = input file\n  3rd = output file");
+        if (argc != 4 && argc != 5)   {
+            throw std::string("Exactly 3 input arguments are required:\n  1st = action (encrypt or decrypt)\n  2nd = input file\n  3rd = output file\n  4th (optional) = key. If it is not specified, the user will be asked to provide it at runtime");
         }
 
-        cout << "Type the key: ";
         std::string key_string;
-        cin >> key_string;
+        if (argc == 4)  {
+            cout << "Type the key: ";
+            cin >> key_string;
+        }
+        if (argc == 5)  {
+            key_string = string(argv[4]);
+        }
         vector<Byte> key            = GetKeyByteVector(key_string);
 
         FileEncryptor file_encryptor(key);

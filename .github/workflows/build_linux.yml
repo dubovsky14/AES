@@ -37,8 +37,7 @@ jobs:
               chmod u+x main
               ls -al
               pwd
-              ./main encrypt main main_encrypted
-              #12345
+              ./main encrypt main main_encrypted 1234567890
       - uses: actions/upload-artifact@v3
         with:
           name: artifact-linux-encrypt
@@ -65,8 +64,7 @@ jobs:
               chmod u+x main
               ls -al
               pwd
-              ./main decrypt main_encrypted main_decrypted
-              #12345
+              ./main decrypt main_encrypted main_decrypted 1234567890
       - run:  |
               md5sum main
               md5sum main_encrypted
