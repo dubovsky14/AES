@@ -107,11 +107,8 @@ void FileEncryptor::DecryptFile(const std::string &input_file_address, const std
 };
 
 void    FileEncryptor::Encrypt(const unsigned char *data, const Byte *vector_to_add)    {
-    // TODO: 2 copies in memory are created, maybe we can optimize this
-    memcpy(m_temp_input, data, 16);
-
     // Add initial vector
-    add_two_128bit_chunks(m_temp_input, vector_to_add, m_temp_input);
+    add_two_128bit_chunks(reinterpret_cast<const Byte*> (data), vector_to_add, m_temp_input);
 
     m_aes_handler->Encrypt(m_temp_input, m_temp_result);
 };
