@@ -13,3 +13,87 @@ jobs:
               cd bin
               cmake ../.
               make
+        name: upload_artifact
+      - uses: actions/upload-artifact@v3
+        with:
+          name: artifact-linux-build
+          path: bin/main
+          retention-days: 1
+
+
+  run-128bit-encryption:
+    runs-on: ubuntu-latest
+    needs: [build-linux]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      - uses: actions/download-artifact@v3
+        name: Download linux build
+        with:
+          name: artifact-linux-build
+      - run:  |
+              chmod u+x main
+              ls -al
+              pwd
+              ./main encrypt main main_encrypted
+              #12345
+      - uses: actions/upload-artifact@v3
+        with:
+          name: artifact-linux-encrypt
+          path: main_encrypted
+          retention-days: 1
+
+  run-128bit-decryption:
+    runs-on: ubuntu-latest
+    needs: [build-linux, run-128bit-encryption]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      - uses: actions/download-artifact@v3
+        name: Download linux build
+        with:
+          name: artifact-linux-build
+      - uses: actions/download-artifact@v3
+        name: Download encrypted main
+        with:
+          name: artifact-linux-encrypt
+      - run:  |
+              chmod u+x main
+              ls -al
+              pwd
+              ./main decrypt main_encrypted main_decrypted
+              #12345
+      - run:  |
+              md5sum main
+              md5sum main_encrypted
+              md5sum main_decrypted
+        name: md5sums
+      - uses: actions/upload-artifact@v3
+        with:
+          name: artifact-linux-decrypt
+          path: main_decrypted
+          retention-days: 1
+
+  run-128bit-validation:
+    runs-on: ubuntu-latest
+    needs: [build-linux, run-128bit-decryption]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      - uses: actions/download-artifact@v3
+        name: Download original main
+        with:
+          name: artifact-linux-build
+      - uses: actions/download-artifact@v3
+        name: Download decrypted main
+        with:
+          name: artifact-linux-decrypt
+      - run: python3 CI_tests/compare_files.py main main_decrypted
+        name: Compare SHA256
+

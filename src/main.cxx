@@ -60,5 +60,6 @@ int main(int argc, const char **argv)   {
     }
     catch (const std::string &e)    {
         cout << e << endl;
+        abort();
     }
 }
