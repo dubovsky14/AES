@@ -5,12 +5,10 @@
 
 using namespace AES;
 
-std::vector<Byte> SBox::s_sbox_encrypt;
-std::vector<Byte> SBox::s_sbox_decrypt;
+Byte SBox::s_sbox_encrypt[256];
+Byte SBox::s_sbox_decrypt[256];
 
 void SBox::Initialize()   {
-    s_sbox_decrypt.resize(256);
-    s_sbox_encrypt.resize(256);
     for (unsigned short i = 0; i < 256; i++)    {
         Byte input_byte(i);
         const Byte input_inverse = input_byte.get_inverse();

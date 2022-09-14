@@ -36,7 +36,7 @@ void FileEncryptor::EncryptFile(const std::string &input_file_address, const std
     unsigned char input_buffer[16];
     ofstream output_file(output_file_address, std::ios::binary | std::ios::out);
 
-    output_file << file_size;
+    output_file << std::noskipws << file_size;
 
     // Set initial vector and save it into the encrypted file
     if (m_use_initial_vector)   SetInitialVector();
@@ -66,7 +66,7 @@ void FileEncryptor::DecryptFile(const std::string &input_file_address, const std
 
     ofstream output_file(output_file_address, std::ios::binary | std::ios::out);
     uint64_t file_size;
-    input_file >> file_size;
+    input_file >> std::noskipws >> file_size;
 
     // reading initial vector
     unsigned char iv[16];

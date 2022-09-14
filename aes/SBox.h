@@ -14,8 +14,8 @@ namespace AES   {
             static void Initialize();
 
         private:
-            static std::vector<Byte> s_sbox_encrypt;
+            static Byte s_sbox_encrypt[256];
 
-            static std::vector<Byte> s_sbox_decrypt;
+            static Byte s_sbox_decrypt[256];
     };
 }
