@@ -17,6 +17,8 @@ namespace AES   {
 
             AESHandler(const std::vector<Byte> &key);
 
+            AESHandler(const unsigned char *key, unsigned int key_size_bits);
+
             void Encrypt(Byte *text)  const;
             void Encrypt(const Byte *plain_text, Byte *cipher_text) const;
 

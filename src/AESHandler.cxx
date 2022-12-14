@@ -6,6 +6,7 @@
 #include "../aes/EncryptIteration.h"
 
 #include <vector>
+#include <string>
 
 using namespace std;
 using namespace AES;
@@ -29,6 +30,17 @@ AESHandler::AESHandler(uint64_t key_part1, uint64_t key_part2, uint64_t key_part
 
 AESHandler::AESHandler(const std::vector<Byte> &key)    {
     Initialize(key);
+};
+
+AESHandler::AESHandler(const unsigned char *key, unsigned int key_size_bits)    {
+    if (key_size_bits != 128 && key_size_bits != 192 && key_size_bits != 256)   {
+        throw std::string("AESHandler::Invalid key size: " + std::to_string(key_size_bits) + " bits");
+    }
+    vector<Byte> key_vector;
+    for (unsigned i_byte = 0; i_byte < key_size_bits/8; i_byte++)   {
+        key_vector.push_back(Byte(key[i_byte]));
+    }
+    Initialize(key_vector);
 };
 
 void AESHandler::Initialize(const std::vector<Byte> &key)   {
