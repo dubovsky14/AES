@@ -89,6 +89,15 @@ void AESHandler::Decrypt(const Byte *cipher_text, Byte *plain_text)   const {
     Decrypt(plain_text);
 };
 
+void AESHandler::Decrypt(unsigned char *text)  const    {
+    Decrypt(reinterpret_cast<Byte *>(text));
+};
+
+void AESHandler::Decrypt(const unsigned char *cipher_text, unsigned char *plain_text) const {
+    copy_array(cipher_text, plain_text, 16);
+    Decrypt(plain_text);
+};
+
 std::vector<Byte> AESHandler::GetByteVector(const std::string &input_text)  {
     vector<Byte> result;
     const unsigned int length = input_text.length();

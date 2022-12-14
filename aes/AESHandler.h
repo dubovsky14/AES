@@ -26,6 +26,9 @@ namespace AES   {
             void Decrypt(Byte *text)  const;
             void Decrypt(const Byte *cipher_text, Byte *plain_text)   const;
 
+            void Decrypt(unsigned char *text)  const;
+            void Decrypt(const unsigned char *cipher_text, unsigned char *plain_text) const;
+
             static std::vector<Byte> GetByteVector(const std::string &input_text);
 
         private:
