@@ -9,4 +9,5 @@ set(CMAKE_CXX_FLAGS "-O3")
 
 file(GLOB SOURCES "src/*.cxx")
 add_executable(main ${SOURCES})
+add_library(AES ${SOURCES})
 target_link_libraries(main ${ROOT_LIBRARIES})
